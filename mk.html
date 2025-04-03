@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Music Wave Animation</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #121212;
+            flex-direction: column;
+        }
+
+        .play-button {
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            padding: 15px 40px;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            background: transparent;
+            border-radius: 50px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            overflow: hidden;
+        }
+
+        .play-button::before {
+            content: "";
+            position: absolute;
+            inset: -3px;
+            background: linear-gradient(45deg, violet, purple);
+            z-index: -1;
+            border-radius: inherit;
+            animation: rotateBorder 3s linear infinite;
+        }
+
+        .play-button::after {
+            content: "";
+            position: absolute;
+            inset: 2px;
+            background: #121212;
+            z-index: -1;
+            border-radius: inherit;
+        }
+
+        @keyframes rotateBorder {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .play-button:hover {
+            background: linear-gradient(45deg, violet, purple);
+            color: white;
+        }
+
+        /* Wave Animation */
+        .wave-container {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            position: relative;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .wave {
+            width: 5px;
+            height: 20px;
+            background: violet;
+            animation: waveMove 1s infinite;
+            border-radius: 5px;
+        }
+
+        .wave:nth-child(2) { animation-delay: 0.2s; }
+        .wave:nth-child(3) { animation-delay: 0.4s; }
+        .wave:nth-child(4) { animation-delay: 0.6s; }
+        .wave:nth-child(5) { animation-delay: 0.8s; }
+
+        @keyframes waveMove {
+            0% { height: 10px; }
+            50% { height: 30px; }
+            100% { height: 10px; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="play-button" onclick="playMusic()">Play Music</button>
+
+    <div class="wave-container" id="wave-container">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+
+    <audio id="background-music" src="https://github.com/sahid-gif/Music-/raw/refs/heads/main/3%20Apr,%201.42%20pm%E2%80%8B(2).m4a"></audio>
+
+    <script>
+        function playMusic() {
+            let audio = document.getElementById("background-music");
+            let playButton = document.querySelector(".play-button");
+            let waveContainer = document.getElementById("wave-container");
+
+            audio.play();
+            playButton.style.display = "none"; // Hide play button
+            waveContainer.style.display = "flex"; // Show wave animation
+
+            // Adjust wave movement based on music rhythm
+            let waves = document.querySelectorAll(".wave");
+            audio.addEventListener("timeupdate", function() {
+                let volume = audio.volume;
+                let level = Math.floor(audio.currentTime % 5) + 1; // Random effect
+                waves.forEach((wave, index) => {
+                    wave.style.height = `${10 + (Math.random() * 20 * volume * level)}px`;
+                });
+            });
+        }
+    </script>
+
+</body>
+</html>
